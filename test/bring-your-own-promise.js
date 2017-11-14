@@ -10,12 +10,17 @@ const Pool = require('../')
 
 const checkType = promise => {
   expect(promise).to.be.a(BluebirdPromise)
-  return promise.catch(e => undefined)
+  return promise.catch(e => console.log(e))
 }
 
 describe('Bring your own promise', function () {
   it('uses supplied promise for operations', co.wrap(function * () {
-    const pool = new Pool({ Promise: BluebirdPromise })
+    const pool = new Pool({
+      user: 'travis',
+      db: 'travis',
+      port: 5432,
+      Promise: BluebirdPromise
+    })
     const client1 = yield checkType(pool.connect())
     client1.release()
     yield checkType(pool.query('SELECT NOW()'))
